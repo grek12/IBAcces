@@ -1,7 +1,9 @@
 package home;
 
+import controller.LoginController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,12 +18,19 @@ public class Main extends Application {//Главный метод main
 
     private double xOffset = 0;
     private double yOffset = 0;
-
+    @FXML
+    private LoginController mainController;
     @Override
     public void start(Stage stage) throws Exception {//запуск формы авторизации
-        Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/Login.fxml"));
+        Parent root = fxmlLoader.load();
+        LoginController mainController = fxmlLoader.getController();
+        mainController.asd2();
+        mainController.loadData();
         stage.initStyle(StageStyle.DECORATED);
-        stage.setTitle("Адвокатская контора");
+
+        stage.setTitle("Права доступа");
         stage.setMaximized(false);
         stage.setResizable(false);
         root.setOnMousePressed(new EventHandler<MouseEvent>() {//установка курсора

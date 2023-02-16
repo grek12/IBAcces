@@ -10,20 +10,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="503.0" prefWidth="854.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="503.0" prefWidth="854.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
     <children>
         <AnchorPane prefHeight="503.0" prefWidth="382.0" style="-fx-background-color: #0C39FF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <ImageView fitHeight="52.0" fitWidth="52.0" layoutX="166.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="52.0" fitWidth="52.0" layoutX="157.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@icons8_Google_Wallet_50px.png" />
                     </image>
                 </ImageView>
-                <Label alignment="CENTER" layoutX="96.0" layoutY="264.0" prefHeight="23.0" prefWidth="190.0" text="Адвокатская контора" textFill="WHITE">
-                    <font>
-                        <Font name="Segoe UI" size="18.0" />
-                    </font>
-                </Label>
             </children>
         </AnchorPane>
         <Pane layoutX="488.0" layoutY="100.0" prefHeight="177.0" prefWidth="283.0" AnchorPane.bottomAnchor="226.0" AnchorPane.topAnchor="100.0">

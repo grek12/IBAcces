@@ -1,324 +1,342 @@
 package controller;
-
+import home.Main;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import model.DAOService;
-import model.Service;
+import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import model.AbstractFile;
+
+import model.FileAccessRights;
+import model.User;
+import model.UserManagement;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Controller2 implements Initializable {//класс контроллер главного экрана
 
     @FXML
-    private TableView<Service> tableService;
+    private ComboBox<String> accesBox;
 
     @FXML
-    private TableColumn<Service, Integer> idService;
+    private TableColumn<User, String> file1Col;
 
     @FXML
-    private TableColumn<Service, String> nameService;
+    private Label file1txt;
 
     @FXML
-    private TableColumn<Service, Float> priceService;
+    private TableColumn<User, String> file2Col;
 
     @FXML
-    private TextField txtNameService;
+    private Label file2txt;
 
     @FXML
-    private TextField txtPriceService;
+    private TableColumn<User, String> file3Col;
 
     @FXML
-    private TextArea description;
-
-    public DAOService dao;
-
+    private Label file3txt;
 
     @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle) {//Блок инициализации
-        dao = new DAOService();
-        tableService.setItems(dao.selectService());
-        idService.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameService.setCellValueFactory(new PropertyValueFactory<>("typeservice"));
-        priceService.setCellValueFactory(new PropertyValueFactory<>("price"));
-    }
+    private TableColumn<User, String> file4Col;
 
     @FXML
-    private void searchNameservice() {//поиск услуги по названию
-        txtPriceService.clear();
-        try {
-
-            List<Service> result = dao.searchService1(txtNameService.getText());
-
-            tableService.setItems(FXCollections.observableList(result));
-
-        } catch (Exception e) {
-            DialogError("Ошибка!");
-            e.printStackTrace();
-        }
-    }
+    private Label file4txt;
 
     @FXML
-    private void searchPriceservice() {//поиск услуги по цене
-        txtNameService.clear();
-        try {
-
-            List<Service> result = dao.searchService2(Float.parseFloat(txtPriceService.getText()));
-
-            tableService.setItems(FXCollections.observableList(result));
-
-        } catch (Exception e) {
-            tableService.setItems(dao.selectService());
-            e.printStackTrace();
-        }
-    }
+    private TableColumn<User, String> file5Col;
 
     @FXML
-    private void addService() {//открытие форсы добавление новой услуги
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/addService.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 410, 150);
-            Stage stage = new Stage();
-            stage.setTitle("Добавление новой услуги");
-            stage.setScene(scene);
-            stage.getIcons().add(new Image(Controller2.class.getResourceAsStream("/icon.png")));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.show();
-            Controller3 controller3 = fxmlLoader.getController();
-            controller3.setMainController(this);
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Не удалось создать новое окно.", e);
-
-        }
-    }
-
-    public void updateService(ActionEvent event) {//открытие формы изменение данных услуги
-        Service service = tableService.getSelectionModel().getSelectedItem();
-        if (service != null) {
-            updateService(service);
-        } else {
-            DialogError("Услуга не выбрана");
-        }
-    }
+    private Label rightTxt;
 
     @FXML
-    private void updateService(Service service) {//открытие формы изменение данных услуги
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/updateService.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 410, 180);
-            Stage stage = new Stage();
-            stage.setTitle("Изменение данных услуги");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.getIcons().add(new Image(Controller2.class.getResourceAsStream("/icon.png")));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-            Controller4 controller = fxmlLoader.getController();
-            controller.setPerson(service);
-            controller.setMainController(this);
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Не удалось создать новое окно.", e);
+    private Label file5txt;
+
+    @FXML
+    private TableColumn<User, String> file6Col;
+
+    @FXML
+    private Label file6txt;
+
+    @FXML
+    private ComboBox<AbstractFile> fileBox;
+
+    @FXML
+    private Label nametxt;
+
+    @FXML
+    private TableColumn<User, String> passCol;
+
+    @FXML
+    private Label passtxt;
+
+    @FXML
+    private TableView<User> table1;
+
+    @FXML
+    private TableColumn<User, String> userCol;
+
+    @FXML
+    private ComboBox<User> usersBox;
+
+    @FXML
+    private Label file1txtT;
+    @FXML
+    private Label file2txtT;
+    @FXML
+    private Label file3txtT;
+    @FXML
+    private Label file4txtT;
+    @FXML
+    private Label file5txtT;
+    @FXML
+    private Label file6txtT;
+    @FXML
+    public Button closeButton;
+
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    @FXML
+    private LoginController mainController;
+
+        private UserManagement userManagement;
+
+
+        public Controller2 (){
 
         }
 
-    }
 
     @FXML
-    private void deleteService() {//подтверждение удаления
-        Service service = tableService.getSelectionModel().getSelectedItem();
-        if (service == null) {
-            DialogError("Удаление невозможно, список услуг пуст!");
-        } else {
-            if (DialogConf("Подтверждаете удаление услуги?")) {
+    public void setMainController(LoginController mainController) {
+        this.mainController = mainController;
 
-                try {
+    }
 
-                    dao.deleteService(Integer.valueOf(service.getId()));
-                    DialogInfo("Услуга успешно удалена!");
-                    updateTable();
+    public void setUserManagement(UserManagement userManagement) {//получение данных
+        this.userManagement = userManagement;
+        usersBox.getItems().addAll(userManagement.getAllUsers().values());
+        fileBox.getItems().addAll(userManagement.getAllFiles().values());
+        accesBox.getItems().addAll(FileAccessRights.READ,
+                FileAccessRights.RECORD,
+                FileAccessRights.FULL_ACCESS,
+                FileAccessRights.NO_ACCESS,
+                FileAccessRights.GRANT);
+        test2();
+        test();
+        tableIns();
+    }
 
-                } catch (Exception e) {
-                    DialogError("Ошибка при удалении");
-                    e.printStackTrace();
-                }
+    void tableIns(){
+        ObservableList<User> users = FXCollections.observableArrayList(userManagement.getAllUsers().values());
+        table1.setItems(users);
+        userCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+        passCol.setCellValueFactory(new PropertyValueFactory<>("password"));
+        file1Col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> userCellDataFeatures) {
+                User user = userCellDataFeatures.getValue();
+                return new SimpleStringProperty(user.getFileAccessRight("file1"));
             }
-        }
-    }
-
-    @FXML
-    public void clickItem() {//отлов клика на таблицу
-        tableService.setOnMouseClicked(event -> {
-            description();
+        });
+        file2Col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> userCellDataFeatures) {
+                User user = userCellDataFeatures.getValue();
+                return new SimpleStringProperty(user.getFileAccessRight("file2"));
+            }
+        });
+        file3Col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> userCellDataFeatures) {
+                User user = userCellDataFeatures.getValue();
+                return new SimpleStringProperty(user.getFileAccessRight("file3"));
+            }
+        });
+        file4Col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> userCellDataFeatures) {
+                User user = userCellDataFeatures.getValue();
+                return new SimpleStringProperty(user.getFileAccessRight("file4"));
+            }
+        });
+        file5Col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> userCellDataFeatures) {
+                User user = userCellDataFeatures.getValue();
+                return new SimpleStringProperty(user.getFileAccessRight("file5"));
+            }
+        });
+        file6Col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> userCellDataFeatures) {
+                User user = userCellDataFeatures.getValue();
+                return new SimpleStringProperty(user.getFileAccessRight("file6"));
+            }
         });
     }
 
-    @FXML
-    public void description() {//вывод данных "описание услуги"
-        Service service = tableService.getSelectionModel().getSelectedItem();
+    void test(){
+        nametxt.setText(userManagement.getCurrentUser().getUsername());
+        passtxt.setText(userManagement.getCurrentUser().getPassword());
+        if(userManagement.getCurrentUser().isRight()){
+            rightTxt.setText("Есть права");
+        } else{
+            rightTxt.setText("Нет прав");
+        }
 
-        description.setText(service.getDescription());
-    }
+        file1txt.setText(userManagement.getCurrentUser().getFileAccessRight("file1"));
+        file2txt.setText(userManagement.getCurrentUser().getFileAccessRight("file2"));
+        file3txt.setText(userManagement.getCurrentUser().getFileAccessRight("file3"));
+        file4txt.setText(userManagement.getCurrentUser().getFileAccessRight("file4"));
+        file5txt.setText(userManagement.getCurrentUser().getFileAccessRight("file5"));
+        file6txt.setText(userManagement.getCurrentUser().getFileAccessRight("file6"));
 
+        }
+
+        void test2(){
+            Map<String, AbstractFile> files = userManagement.getAllFiles();
+
+            if (files != null) {
+                int i = 1;
+                for (Map.Entry<String, AbstractFile> entry : files.entrySet()) {
+                    switch(i) {
+                        case 1:
+                            file1txtT.setText(entry.getKey());
+                            break;
+                        case 2:
+                            file2txtT.setText(entry.getKey());
+                            break;
+                        case 3:
+                            file3txtT.setText(entry.getKey());
+                            break;
+                        case 4:
+                            file4txtT.setText(entry.getKey());
+                            break;
+                        case 5:
+                            file5txtT.setText(entry.getKey());
+                            break;
+                        case 6:
+                            file6txtT.setText(entry.getKey());
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
+                }
+            }
+        }
+
+        @FXML
+        void handleButtonAction(ActionEvent event){
+            Stage stage = (Stage) closeButton.getScene().getWindow();
+            userManagement.setCurrentUser(null);
+            stage.close();
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("/Login.fxml"));
+                Parent root = fxmlLoader.load();
+                LoginController controller = fxmlLoader.getController();
+                controller.ads(userManagement);
+                controller.tt();
+
+            stage.setTitle("Права доступа");
+            stage.setMaximized(false);
+            stage.setResizable(false);
+            root.setOnMousePressed(new EventHandler<MouseEvent>() {//установка курсора
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            root.setOnMouseDragged(new EventHandler<MouseEvent>() {//установка курсора
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            Scene scene = new Scene(root);
+            stage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.png")));
+
+            stage.setScene(scene);
+            stage.show();
+
+            }
+            catch (IOException ex){
+
+            }
+        }
     @FXML
     public void updateTable() {
-        tableService.setItems(dao.selectService());
-    }//обновление таблицы с услугами
+        ObservableList<User> users = FXCollections.observableArrayList(userManagement.getAllUsers().values());
+        table1.setItems(users);
 
-    @FXML
-    private void openClientForm() {//открытие формы клиентов
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/ClientForm.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 645, 515);
-            Stage stage = new Stage();
-            stage.setTitle("Данные клиентов");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.getIcons().add(new Image(Controller2.class.getResourceAsStream("/icon.png")));
-            stage.show();
+    }
 
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Не удалось создать новое окно.", e);
+        @FXML
+        void grantAccesT(){
+
+            String selectedUser = String.valueOf(usersBox.getValue());
+            String selectedFile = String.valueOf(fileBox.getValue());
+            String selectedAccess = accesBox.getValue();
+            if (selectedUser != null &&  selectedAccess != null) {
+                if (selectedAccess.equals("Выдача прав")) {
+                    userManagement.grantRight(selectedUser,true);
+
+                }
+            }
+            if (selectedUser != null && selectedFile != null && selectedAccess != null) {
+
+                switch (selectedAccess) {
+                    case "Полный доступ":
+                        userManagement.grantAccessRight(selectedFile, selectedUser, FileAccessRights.FULL_ACCESS);
+                        break;
+                    case "Чтение":
+                        userManagement.grantAccessRight(selectedFile, selectedUser, FileAccessRights.READ);
+                        break;
+                    case "Запись":
+                        userManagement.grantAccessRight(selectedFile, selectedUser, FileAccessRights.RECORD);
+                        break;
+                    case "Нет доступа":
+                        userManagement.grantAccessRight(selectedFile, selectedUser, FileAccessRights.NO_ACCESS);
+                        break;
+                }
+
+                updateTable();
+                table1.refresh();
+
+            }
 
         }
+
+        
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
-
-    @FXML
-    private void openContractForm() {//открытие формы оформленных  договоров
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/ContractForm.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 884, 484);
-            Stage stage = new Stage();
-            stage.setTitle("Данные договоров");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.getIcons().add(new Image(Controller2.class.getResourceAsStream("/icon.png")));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Не удалось создать новое окно.", e);
-
-        }
-    }
-
-    public void openAddContractForm(ActionEvent event) {//открытие формы добавления договора
-        Service service = tableService.getSelectionModel().getSelectedItem();
-        if (service != null) {
-            openAddContractForm(service);
-        } else {
-            DialogError("Услуга не выбрана");
-        }
-    }
-
-    @FXML
-    private void openAddContractForm(Service service) {//открытие формы добавления договора
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/addContract.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 420, 253);
-            Stage stage = new Stage();
-            stage.setTitle("Добавление договора");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.getIcons().add(new Image(Controller2.class.getResourceAsStream("/icon.png")));
-            Controller9 controller = fxmlLoader.getController();
-            controller.setService(service);
-            controller.setMainController(this);
-            stage.show();
-
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Не удалось создать новое окно.", e);
-
-        }
-    }
-
-    @FXML
-    private void openLawyeerForm() {//открытие формы с адвокатами
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/lawyeerForm.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 620, 524);
-            Stage stage = new Stage();
-            stage.setTitle("Данные адвокатов");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.getIcons().add(new Image(Controller2.class.getResourceAsStream("/icon.png")));
-            stage.show();
-
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Не удалось создать новое окно.", e);
-
-        }
-    }
-
-
-    public void DialogError(String error) {//диалоговое сообщение
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/fullpackstyling.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        alert.setTitle("Ошибка");
-        alert.setHeaderText(null);
-        alert.setContentText(error);
-
-        alert.showAndWait();
-    }
-
-    public void DialogInfo(String info) {//диалоговое сообщение
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Информация");
-        alert.setHeaderText(null);
-        alert.setContentText(info);
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/fullpackstyling.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        alert.showAndWait();
-    }
-
-    public boolean DialogConf(String conf) {//диалоговое сообщение
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Подтверждение");
-        alert.setHeaderText(null);
-        alert.setContentText(conf);
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/fullpackstyling.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        Optional<ButtonType> opcao = alert.showAndWait();
-
-        if (opcao.get() == ButtonType.OK) {
-            return true;
-        }
-        return false;
-    }
-
-
 }
